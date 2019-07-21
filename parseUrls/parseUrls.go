@@ -10,7 +10,7 @@ import (
 )
 
 
-func ParseUrls(url string,fileName string)  {
+func ParseUrls(url string,fileName string) (bool,error)  {
 	var dstFile (*os.File)
 	_, err := os.Stat(fileName)  
     if err != nil {  
@@ -18,7 +18,7 @@ func ParseUrls(url string,fileName string)  {
     }  else{
 		dstFile,_ = os.OpenFile(fileName, os.O_APPEND, 0666) 
 	}
-///html/tv/hytv/index.html
+	
 	body := fetch.Fetch(url)
 	body = strings.Replace(body,"\n","",-1)
 	rp := regexp.MustCompile(`<a href="(.*?)" class="ulink" title="(.*?)">(.*?)</a>`)
@@ -30,4 +30,5 @@ func ParseUrls(url string,fileName string)  {
 		dstFile.WriteString(resultString + "\n")
 	}
 	defer dstFile.Close()
+	return true,nil
 }
